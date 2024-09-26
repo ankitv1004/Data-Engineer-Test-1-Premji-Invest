@@ -1,5 +1,6 @@
 FROM apache/airflow:2.4.2
-
-RUN pip install pandas requests bs4 json lxml pymongo scipy numpy random
+ENV AIRFLOW_VERSION=2.4.2
+RUN pip install apache-airflow==${AIRFLOW_VERSION} pandas requests bs4 lxml pymongo 
+RUN pip install apache-airflow==${AIRFLOW_VERSION} scipy numpy
 
 COPY dags/ /dags/
