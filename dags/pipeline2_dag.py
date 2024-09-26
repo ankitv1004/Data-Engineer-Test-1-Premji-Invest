@@ -22,12 +22,17 @@ dag = DAG(
     schedule_interval=timedelta(hours=7),  # Set the schedule as needed
     catchup=False,
 )
+def log_execution_date(execution_date):
+    logging.info(f'Checking for completion of task on execution date: {execution_date}')
+    return execution_date
 
 wait_for_pipeline1 = ExternalTaskSensor(
     task_id='wait_for_pipeline1',
     external_dag_id='pipeline1_dag',  # The ID of Pipeline1
     external_task_id='persist_data',  # The ID of the last task in Pipeline1
-    execution_date_fn=lambda execution_date: execution_date,  # Ensure it runs for the same day
+    # execution_date_fn=log_execution_date,  # Ensure it runs for the same day
+    timeout=300,  # Adjust this to fit your needs
+    poke_interval=30,
     dag=dag,
 )
 
@@ -63,4 +68,5 @@ similiar_movies = PythonOperator(
     dag=dag,
 )
 
-wait_for_pipeline1>>mean_age_by_occupation>>top_20_movies>>top_genres>>similiar_movies
+#wait_for_pipeline1>>
+mean_age_by_occupation>>top_20_movies>>top_genres>>similiar_movies
